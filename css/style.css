@@ -1,0 +1,12 @@
+/* RESET */
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+/* COMMON */
+.container{
+    width: 80rem;
+    margin: auto;
+    height: 100%;
+}
