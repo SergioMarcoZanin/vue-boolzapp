@@ -10,3 +10,24 @@
     margin: auto;
     height: 100%;
 }
+.container-aside{
+    display: flex;
+    height: 60px;
+}
+.avatar-image{
+    max-width: 3.125rem;
+    border-radius: 100%;
+    padding-right: .5rem;
+    object-fit: cover;
+}
+/* BODY */
+body{
+    display: flex;
+    background-image: linear-gradient(to top,#D9DBD4 80%, #009688 20%);
+    height: 100vh;
+}
+/* HEADER */
+header{
+    background-color: #EAEAEA;
+    display: flex;
+}
