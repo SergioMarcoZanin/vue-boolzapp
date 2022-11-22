@@ -188,4 +188,68 @@ createApp({
                 }
             ],
         }
-    }})
+    },
+    methods:{
+        changeActiveContact(i){
+            this.activeContact=i;
+            document.getElementById(i).classList.add("d-none");
+            this.unreadContacts[i].splice(0);
+        },
+        searchContact(){
+            this.contacts.forEach(contact => {
+                if(this.searchInput.length===0){
+                    contact.visible=true;
+                }else if(contact.name.toUpperCase().includes(this.searchInput.toUpperCase())){
+                    contact.visible=true;
+                }else{
+                    contact.visible=false;
+                }
+            });
+        },   
+        getDate(date){
+            return moment(date).fromNow();
+        },
+        deleteMessage(i){
+            this.contacts[this.activeContact].messages.splice(i,1);
+            console.log(this.contacts[this.activeContact].messages)
+        },
+        getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min) ) + min;
+        },
+        overwriteName(){
+            if(this.changeNameVisible===true){
+                this.changeNameVisible=false;
+                document.querySelector(".user-name").classList.add("border-bottom-green");
+            }else{
+                this.changeNameVisible=true;
+                document.querySelector(".user-name").classList.remove("border-bottom-green");
+            }
+        },
+        overwriteInfo(){
+            if(this.changeInfoVisible===true){
+                this.changeInfoVisible=false;
+                document.querySelector(".user-info").classList.add("border-bottom-green");
+            }else{
+                this.changeInfoVisible=true;
+                document.querySelector(".user-info").classList.remove("border-bottom-green");
+            }
+        },
+        hideNotification(){
+            this.dNone="d-none";
+        },
+        showArrow(){
+            this.inputNotFocussed=false;
+        },
+        closeSearch(){
+            this.searchInput="";
+            this.inputNotFocussed=true;
+        },
+        autoScroll(){
+            if(this.activeContact>=0){
+                const messages=document.querySelector(".messages");
+                let scrollHeight=messages.scrollHeight;
+                messages.scrollTop=scrollHeight;
+            }
+        }
+    },
+}).mount("#app");
