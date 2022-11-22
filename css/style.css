@@ -14,6 +14,9 @@
     display: flex;
     height: 60px;
 }
+.h-80{
+    min-height: 5rem;
+}
 .avatar-image{
     max-width: 3.125rem;
     border-radius: 100%;
@@ -31,7 +34,7 @@ header{
     background-color: #EAEAEA;
     display: flex;
 }
-.header-aside{
+.header-left{
     display: flex;
     justify-content: space-between;
     width: 35%;
@@ -149,7 +152,7 @@ main{
     flex-direction: column;
     overflow-y: hidden;
 }
-/* lista messaggi */
+
 .messages{
     flex-grow: 1;
     background-image: url(../img/mine.jpg);
