@@ -7,155 +7,206 @@
     <title>Vue-Boolzapp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-    <div class="app">
+    <div id="app">
         <div class="container">
-            <header>
-                <div class="header-left">
-                    <div class="user">
-                        <img src="img/avatar_2.jpg" class="avatar-image" alt="user image">
-                        <span id="user-name">Sergio Marco</span>
-                    </div>
-                    <div class="header-left-icons">
-                        <i class="fa-solid fa-circle-notch"></i>
-                        <i class="fa-solid fa-message"></i>
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="header-contact">
-                        <img class="avatar-image" src="img/avatar_1.jpg" alt="user image">
-                        <div class="text">
-                            <div class="name">Luca</div>
-                            <div class="last-access">Ultimo accesso oggi alle 12:00</div>
-                        </div>
-                    </div>
-                <div class="header-right-icons">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <i class="fa-solid fa-paperclip"></i>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </div>
-            </header>
-            <div class="container-aside">
+            <div class="container-main-aside">
                 <aside>
-                    <div class="notification ">
-                        <div class="bell">
-                            <i class="fa-solid fa-bell-slash"></i>
+                    <!-- parte sinistra header -->
+                    <div class="header-aside">
+                        <!-- immagine e nome utente -->
+                        <div class="user">
+                            <a class="btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                                <img src="img/avatar_2.jpg" class="avatar-image" alt="user image">
+                            </a>
+                            <span class="name">{{userName}}</span>
                         </div>
-                        <div class="notification-text">
-                            <div>Ricevi notifiche di nuovi messaggi</div>
-                            <a href="#">Attiva notifiche desktop</a>
+                        <!-- /immagine e nome utente -->
+                        <!-- icone parte sinistra header -->
+                        <div class="header-left-icons">
+                            <i class="fa-solid fa-circle-notch"></i>
+                            <i class="fa-solid fa-message"></i>
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
                         </div>
+                        <!-- /icone parte sinistra header -->
                     </div>
+                    <!-- /parte sinistra header -->
+                    <!-- attiva notifiche -->
+                    <div class="notifications" :class="dNone">
+                        <div class="bell-text">
+                            <div class="bell">
+                                <i class="fa-solid fa-bell-slash"></i>
+                            </div>
+                            <div class="notification-text">
+                                <div>Ricevi notifiche di nuovi messaggi</div>
+                                <a href="#">Attiva notifiche desktop</a>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-xmark" @click="hideNotification"></i>
+                    </div>
+                    <!-- /attiva notifiche -->
+                    <!-- cerca contatto -->
                     <div class="search">
-                        <button class="search-icon">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                        <input type="text" placeholder="Cerca o inizia una nuova chat">
+                        <div class="search-icon">
+                            <i class="fa-solid fa-magnifying-glass" v-if="inputNotFocussed"></i>
+                            <i class="fa-solid fa-arrow-left green" v-else @click="closeSearch"></i>
+                        </div>
+                        <input type="text" placeholder="Cerca o inizia una nuova chat" v-model="searchInput" @keyup="searchContact" @click="showArrow">
                     </div>
+                    <!-- /cerca contatto -->
+                    <!-- lista contatti -->
                     <div class="contacts">
-                        <div class="contact active">
+                        <div class="contact" :class="activeContact===index ? 'active':''" v-for="(contact,index) in contacts" @click="changeActiveContact(index)" v-show="contact.visible||searchInput=='' ">
                             <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
+                                <img class="avatar-image" :src="`img/avatar${contact.avatar}.jpg`" alt="contact.name">
                                 <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
+                                    <div class="name">{{contact.name}}</div>
+                                    <div class="last-message-text" v-if="contact.messages.length>0">
+                                        <span class="light-blue" v-if="contact.messages[contact.messages.length-1].status==='sent'"><i class="fa-solid fa-check-double"></i></span>
+                                        <span class="last-message">{{contact.messages[contact.messages.length-1].message}}</span>
+                                    </div>
+                                    <div v-else class="last">Nessun messaggio nella chat</div>
+                                    <div class="alert-new d-none" :id="index">1</div>
                                 </div>
                             </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact h-80">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact h-80">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact h-80">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact h-80">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
-                        </div>
-                        <div class="contact h-80">
-                            <div class="contact-info">
-                                <img class="avatar-image" src="img/avatar_1.jpg" alt="Avatar Michele">
-                                <div>
-                                    <div class="contact-name">Michele</div>
-                                    <span>Ultimo messaggio inviato</span>
-                                </div>
-                            </div>
-                            <div class="last-message">12:00</div>
+                            <div class="last" v-if="contact.messages.length>0">{{getDate(contact.messages[contact.messages.length-1].date)}}</div>
                         </div>
                     </div>
+                    <!-- /lista contatti -->
+                    <!-- offcanvas profilo -->
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Profilo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div class="profile-image">
+                                <img src="img/avatar_2.jpg" alt="user image">
+                            </div>
+                            <div class="change-name">
+                                <h6>Il tuo nome</h6>
+                                <div class="user-name">
+                                    <span v-if="changeNameVisible">{{userName}}</span>
+                                    <input type="text" v-else v-model="userName">
+                                    <div class="btn-overwrite" @click="overwriteName">
+                                        <i class="fa-solid fa-pencil" v-if="changeNameVisible"></i>
+                                        <i class="fa-solid fa-check" v-else ></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <span>Questo non è il tuo nome utente o PIN. Questo nome verrà visualizzato dai tuoi contatti boolzApp. </span>
+                            <div class="change-info">
+                                <h6>Info</h6>
+                                <div class="user-info">
+                                    <span v-if="changeInfoVisible">{{userInfo}}</span>
+                                    <input type="text" v-else v-model="userInfo">
+                                    <div class="btn-overwrite" @click="overwriteInfo">
+                                        <i class="fa-solid fa-pencil" v-if="changeInfoVisible"></i>
+                                        <i class="fa-solid fa-check" v-else></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- offcanvas profilo -->
                 </aside>
                 <main>
-                    <div class="messages">
+                    <!-- parte destra header -->
+                    <div class="header-right" v-if="activeContact>=0">
+                        <!-- immagine, nome e ultimo accesso contatto visualizzato -->
+                        <div class="header-contact">
+                            <img class="avatar-image" :src="`img/avatar${contacts[activeContact].avatar}.jpg`" alt="user image">
+                            <div class="text">
+                                <div class="name">{{contacts[activeContact].name}}</div>
+                                <div class="last" v-if="contacts[activeContact].messages.length>0">Ultimo accesso {{getDate(contacts[activeContact].messages[contacts[activeContact].messages.length-1].date)}}</div>
+                                <div v-else class="last">Ultimo accesso 2 anni fa</div>
+                            </div>
+                        </div>
+                        <!-- /immagine, nome e ultimo accesso contatto visualizzato -->
+                        <!-- icone parte destra header -->
+                        <div class="header-right-icons">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <i class="fa-solid fa-paperclip"></i>
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                        <!-- /icone parte destra header -->
+                    </div>
+                    <!-- /parte destra header -->
+                    <!-- lista messaggi -->
+                    <div class="messages" v-if="activeContact >= 0">
                         <div class="messages-container">
-                            <div class="message-container">
-                                <div class="message sent">Ricordati di stendere i panni</div>
-                            </div>
-                            <div class="message-container">
-                                <div class="message sent">Hai portato a spasso il cane?</div>
-                            </div>
-                            <div class="message-container">
-                                <div class="message received">Tutto fatto</div>
+                            <div class="message-container" v-for="(message,index) in contacts[activeContact].messages">
+                                <div class="message" :class="message.status" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div>{{message.message}}</div>
+                                    <span class="last">{{getDate(message.date)}}</span>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <div class="dropstart">
+                                                <a class="dropdown-item" href="#" data-bs-toggle="dropdown" aria-expanded="false">Info messaggio</a>
+                                                <ul class="dropdown-menu padd">
+                                                    <li>
+                                                        <h5>Data e ora :</h5>
+                                                        <span>{{message.date.toLocaleString('IT', { timeZone: 'UTC' })}}</span>
+                                                    </li>
+                                                    <hr>
+                                                    <li>
+                                                        <h5>Contenuto :</h5>
+                                                        <span>{{message.message}}</span>
+                                                    </li>
+                                                    <hr>
+                                                    <li v-if="message.status===sent">
+                                                        <h5>Autore :</h5>
+                                                        <span>Tu</span> 
+                                                    </li>
+                                                    <li v-else>
+                                                        <h5>Autore :</h5>
+                                                        <span>{{contacts[activeContact].name}}</span> 
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#" @click="deleteMessage(index)">Cancella messaggio</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="new-message"></div>
+                    <!-- /lista messaggi -->
+                    <!-- messaggio di benvenuto -->
+                    <div class="welcome-message" v-show="activeContact === -1">
+                        <div class="welcome-image">
+                            <img src="https://media.istockphoto.com/id/1161918225/vector/hand-drawn-mobile-phone-and-computer-monitor-vector-illustration.jpg?s=612x612&w=0&k=20&c=iLU36842xp7oFBA1bJBPjCKFjZX7TmcZhrmwzGfHgms=" alt="image welcome message">
+                        </div>
+                        <div class="text">
+                            <h2>BoolzApp Web</h2>
+                            <div>Invia e ricevi messaggi senza mantenere il telefono connesso a Internet.Usa BoolzApp su un massimo di 4 dispositivi collegati e 1 telefono contemporaneamente.</div>
+                        </div>
+                        <div class="cripto">
+                            <i class="fa-solid fa-lock"></i> 
+                            Con crittografia end to end 
+                        </div>
+                    </div>
+                    <!-- /messaggio di benvenuto -->
+                    <!-- input nuovo messaggio -->
+                    <div class="new-message" v-if="activeContact>=0">
+                        <div class="emoji">
+                            <i class="fa-regular fa-face-smile"></i>
+                        </div>
+                        <input type="text" placeholder="Scrivi un messaggio" @keyup.enter="addNewMessage" v-model="newMessage" required>
+                        <div class="audio">
+                            <i class="fa-solid fa-microphone"></i>
+                        </div>
+                    </div>
+                    <!-- /input nuovo messaggio -->
                 </main>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

@@ -5,18 +5,18 @@
     padding: 0;
 }
 /* COMMON */
-.container{
-    width: 80rem;
-    margin: auto;
-    height: 100%;
-}
-.app{
+#app{
     width: 100%;
     height: 95vh;
 }
-.container-aside{
+.container{
+    width: 80rem;
+    margin: auto;
+    height: 95vh;
+}
+.container-main-aside{
     display: flex;
-    height: 60px;
+    height: calc(95vh);
 }
 .h-80{
     min-height: 5rem;
@@ -24,26 +24,48 @@
 .avatar-image{
     max-width: 3.125rem;
     border-radius: 100%;
-    padding-right: .5rem;
+    margin-right: .3125rem;
     object-fit: cover;
 }
-
+.name{
+    font-weight: bold;
+}
+/* impostazioni scrollbar chrome */
+.contacts::-webkit-scrollbar,.messages::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: grey; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+}
+/* impostazioni scrollbar firefox */
+.contacts,.messages {
+    scrollbar-width: none;  
+}
+/* BODY */
 body{
     display: flex;
     background-image: linear-gradient(to top,#D9DBD4 80%, #009688 20%);
     height: 100vh;
+    font-family: 'Lato', sans-serif;
+    align-items: center;
 }
-
-header{
-    background-color: #EAEAEA;
-    display: flex;
-}
-.header-left{
+/* HEADER */
+/* parte sinistra header */
+.header-aside{
     display: flex;
     justify-content: space-between;
-    width: 35%;
-    border-right: .125rem solid grey;
+    border-right: .125rem solid #D1D7DB;
     padding: .625rem;
+    background-color: #EAEAEA;
+    max-height: 4.375rem;
 }
 .user{
     display: flex;
@@ -53,15 +75,18 @@ header{
     display: flex;
     justify-content: space-around;
     align-items: center;
-    min-width: 20%;
+    width: 5.625rem;
     color: #B1B1B1;
 }
-
+.user a{
+    padding: 0 5px;
+}
+/* parte destra header */
 .header-right{
     display: flex;
     justify-content: space-between;
     padding: .625rem;
-    width: 65%;
+    background-color: #EAEAEA;
 }
 .header-contact{
     display: flex;
@@ -71,40 +96,52 @@ header{
     display: flex;
     justify-content: space-around;
     align-items: center;
-    min-width: 10%;
+    width: 5.625rem;
     color: #B1B1B1;
 }
 .last{
     color: #B1B1B1;
     font-size: .875rem;
 }
-
+/* ASIDE */
 aside{
     background-color: white;
+    flex-shrink: 0;
     width: 35%;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
+    position: relative;
 }
-
-.notification{
+/* attiva notifiche */
+.notifications{
     background-color: #8EDAFC;
     display: flex;
     padding: .625rem;
     align-items: center;
+    justify-content: space-between;
 }
 .bell{
-    font-size: 1.25rem;
+    font-size: 1.5625rem;
     border-radius: 100%;
     background-color: white;
     color: #8EDAFC;
+    width: 3.75rem;
+    height: 3.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: .5rem;
-    padding: .75rem;
 }
-.notification a{
+.notifications a{
     color: black;
 }
-
+.bell-text{
+    display: flex;
+    align-items: center;
+    width:90%;
+}
+/* cerca contatto */
 .search{
     display: flex;
     padding: .3125rem;
@@ -114,18 +151,28 @@ aside{
     display: flex;
     justify-content: center;
     align-items: center;
-    border: .1875rem solid #E9EBEB;
     min-height: 2.1875rem;
+    background-color: #F0F2F5;
+    border-bottom-left-radius: .5rem;
+    border-top-left-radius: .5rem;
 }
 .search input{
     width: 85%;
     min-height: 2.1875rem;
-    border-top: .1875rem solid #E9EBEB;
-    border-right: .1875rem solid #E9EBEB;
-    border-bottom: .1875rem solid #E9EBEB;
     padding: .3125rem;
+    border: none;
+    background-color: #F0F2F5;
+    border-bottom-right-radius: .5rem;
+    border-top-right-radius: .5rem;
 }
-
+.search input:focus{ 
+    outline: none; 
+}
+.green{
+    color: green;
+    font-size: 1.125rem;
+}
+/* lista contatti */
 .contacts{
     display: flex;
     flex-direction: column;
@@ -136,11 +183,21 @@ aside{
     display: flex;
     justify-content: space-between;
     width: 100%;
-    border-top: 2px solid #E9EBEB;
     cursor: pointer;
+    position: relative;
+    overflow-y: hidden;
+    max-height: 5rem;
+    overflow-x: hidden;
+}
+.contact:hover{
+    background-color: #E9EBEB;
+}
+.contact:not(:last-child){
+    border-bottom: 2px solid #E9EBEB;
 }
 .contact-info{
     display: flex;
+    max-height: 100%;
 }
 .contact img{
     height: 3.75rem;
@@ -149,6 +206,99 @@ aside{
 .active{
     background-color: #E9EBEB;
 }
+.contact>.last{
+    position: absolute;
+    top: .625rem;
+    right: .625rem;
+
+}
+.last-message-text{
+    padding-right: 1rem;
+    display: flex;
+    margin-top: 1rem;
+}
+.last-message{
+    word-wrap: break-word;
+    max-width: 100%;
+}
+.alert-new{
+    background-color: #25D366;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: white;
+    font-size: .875rem;
+    position: absolute;
+    top: 50%;
+    right: .3125rem;
+    transform: translateY(50%);
+}
+.light-blue{
+    color: #53BDEB;
+    padding-right: .5rem;
+}
+/* offcanvas */
+.offcanvas{
+    position: absolute;
+}
+.offcanvas.offcanvas-start{
+    width: 100%;
+}
+/* offcanvas header */
+.offcanvas-header{
+    padding-top: 4.375rem;
+    background-color: #008069;
+    color: white;
+}
+/* offcanvas body */
+.profile-image{
+    width: 12.5rem;
+    height: 12.5rem;
+    align-self: center;
+    margin: 1rem 0;
+}
+.profile-image img{
+    max-width: 100%;
+    border-radius: 100%;
+}
+.offcanvas-body{
+    display: flex;
+    flex-direction: column;
+    background-color: #F0F2F5;
+}
+.change-name, .change-info{
+    padding: 1rem;
+    background-color: white;
+}
+.change-name h6{
+    color: #008069;
+}
+.offcanvas-body>span{
+    padding: 1rem ;
+    color: #B1B1B1;
+    font-size: .875rem;
+
+}
+.user-name, .user-info{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-overwrite{
+    cursor: pointer;
+}
+.border-bottom-green{
+    border-bottom: 3px solid #008069;
+}
+.user-info input, .user-name input{
+    border: none;
+    flex-grow: 1;
+}
+.user-info input:focus, .user-name input:focus{
+    outline: none; 
+}
 /* MAIN */
 main{
     flex-grow: 1;
@@ -156,7 +306,7 @@ main{
     flex-direction: column;
     overflow-y: hidden;
 }
-
+/* lista messaggi */
 .messages{
     flex-grow: 1;
     background-image: url(../img/mine.jpg);
@@ -175,9 +325,13 @@ main{
     border-radius: .625rem;
     padding: 1.25rem .625rem;
     min-width: 18.75rem;
+    max-width: 18.75rem;
     position: relative;
 }
-.message span{
+.message div{
+    word-wrap: break-word;
+}
+.message>span{
     position: absolute;
     right: .625rem;
     bottom: .3125rem;
@@ -189,6 +343,50 @@ main{
 }
 .received{
     background-color: white;
+}
+.menu div{
+    padding: .9375rem;
+}
+.menu div:hover{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.menu{
+    position: absolute;
+    bottom: -150%;
+    left:50%;
+    background-color: white;
+    box-shadow: .1875rem .1875rem .625rem black;
+    border-radius: .625rem;
+    z-index: 100;
+}
+.d-none{
+    display: none;
+}
+.padd li{
+    padding: .5rem;
+}
+/* messaggio di benvenuto */
+.welcome-message{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    background-image: radial-gradient(white 35%, #008069 120%);
+    text-align: center;
+    justify-content: space-around;
+}
+.welcome-image{
+    max-width: 40%;
+    margin-top: 35%;
+}
+.welcome-image img{
+    max-width: 100%;
+}
+.welcome-message .text{
+    max-width: 70%;
+}
+.deleted{
+    color: #B1B1B1;
 }
 /* input nuovo messaggio */
 .new-message{
@@ -209,5 +407,5 @@ main{
     flex-grow: 1;
     border-radius: .625rem;
     padding: .5rem;
+    outline: none;
 }
-
