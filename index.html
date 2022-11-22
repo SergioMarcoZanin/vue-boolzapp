@@ -9,32 +9,27 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 </head>
 <body>
     <div id="app">
         <div class="container">
             <div class="container-main-aside">
                 <aside>
-                    <!-- parte sinistra header -->
                     <div class="header-aside">
-                        <!-- immagine e nome utente -->
                         <div class="user">
                             <a class="btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
                                 <img src="img/avatar_2.jpg" class="avatar-image" alt="user image">
                             </a>
                             <span class="name">{{userName}}</span>
                         </div>
-                        <!-- /immagine e nome utente -->
-                        <!-- icone parte sinistra header -->
                         <div class="header-left-icons">
                             <i class="fa-solid fa-circle-notch"></i>
                             <i class="fa-solid fa-message"></i>
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                         </div>
-                        <!-- /icone parte sinistra header -->
                     </div>
-                    <!-- /parte sinistra header -->
-                    <!-- attiva notifiche -->
                     <div class="notifications" :class="dNone">
                         <div class="bell-text">
                             <div class="bell">
@@ -47,8 +42,6 @@
                         </div>
                         <i class="fa-solid fa-xmark" @click="hideNotification"></i>
                     </div>
-                    <!-- /attiva notifiche -->
-                    <!-- cerca contatto -->
                     <div class="search">
                         <div class="search-icon">
                             <i class="fa-solid fa-magnifying-glass" v-if="inputNotFocussed"></i>
@@ -56,8 +49,6 @@
                         </div>
                         <input type="text" placeholder="Cerca o inizia una nuova chat" v-model="searchInput" @keyup="searchContact" @click="showArrow">
                     </div>
-                    <!-- /cerca contatto -->
-                    <!-- lista contatti -->
                     <div class="contacts">
                         <div class="contact" :class="activeContact===index ? 'active':''" v-for="(contact,index) in contacts" @click="changeActiveContact(index)" v-show="contact.visible||searchInput=='' ">
                             <div class="contact-info">
@@ -75,8 +66,6 @@
                             <div class="last" v-if="contact.messages.length>0">{{getDate(contact.messages[contact.messages.length-1].date)}}</div>
                         </div>
                     </div>
-                    <!-- /lista contatti -->
-                    <!-- offcanvas profilo -->
                     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
                         <div class="offcanvas-header">
                             <h5 class="offcanvas-title" id="offcanvasExampleLabel">Profilo</h5>
@@ -111,12 +100,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- offcanvas profilo -->
                 </aside>
                 <main>
-                    <!-- parte destra header -->
                     <div class="header-right" v-if="activeContact>=0">
-                        <!-- immagine, nome e ultimo accesso contatto visualizzato -->
                         <div class="header-contact">
                             <img class="avatar-image" :src="`img/avatar${contacts[activeContact].avatar}.jpg`" alt="user image">
                             <div class="text">
@@ -125,17 +111,12 @@
                                 <div v-else class="last">Ultimo accesso 2 anni fa</div>
                             </div>
                         </div>
-                        <!-- /immagine, nome e ultimo accesso contatto visualizzato -->
-                        <!-- icone parte destra header -->
                         <div class="header-right-icons">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <i class="fa-solid fa-paperclip"></i>
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                         </div>
-                        <!-- /icone parte destra header -->
                     </div>
-                    <!-- /parte destra header -->
-                    <!-- lista messaggi -->
                     <div class="messages" v-if="activeContact >= 0">
                         <div class="messages-container">
                             <div class="message-container" v-for="(message,index) in contacts[activeContact].messages">
@@ -174,8 +155,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /lista messaggi -->
-                    <!-- messaggio di benvenuto -->
                     <div class="welcome-message" v-show="activeContact === -1">
                         <div class="welcome-image">
                             <img src="https://media.istockphoto.com/id/1161918225/vector/hand-drawn-mobile-phone-and-computer-monitor-vector-illustration.jpg?s=612x612&w=0&k=20&c=iLU36842xp7oFBA1bJBPjCKFjZX7TmcZhrmwzGfHgms=" alt="image welcome message">
@@ -189,8 +168,6 @@
                             Con crittografia end to end 
                         </div>
                     </div>
-                    <!-- /messaggio di benvenuto -->
-                    <!-- input nuovo messaggio -->
                     <div class="new-message" v-if="activeContact>=0">
                         <div class="emoji">
                             <i class="fa-regular fa-face-smile"></i>
@@ -200,7 +177,6 @@
                             <i class="fa-solid fa-microphone"></i>
                         </div>
                     </div>
-                    <!-- /input nuovo messaggio -->
                 </main>
             </div>
         </div>
